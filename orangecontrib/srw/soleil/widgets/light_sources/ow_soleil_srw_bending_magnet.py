@@ -6,14 +6,14 @@ from orangewidget.settings import Setting
 from oasys.widgets import gui as oasysgui
 from oasys.widgets import congruence
 
-from wofrysrw.storage_ring.light_sources.srw_bending_magnet_light_source import SRWBendingMagnetLightSource
-from wofrysrw.storage_ring.magnetic_structures.srw_bending_magnet import SRWBendingMagnet
+from soleil.wofrysrw.storage_ring.light_sources.srw_infrared_light_source import SRWIRBendingMagnetLightSource
+from soleil.wofrysrw.storage_ring.magnetic_structures.srw_infrared_bending_magnet import SRWIRBendingMagnet
 
 from orangecontrib.srw.widgets.gui.ow_srw_source import OWSRWSource
 
 from syned.storage_ring.magnetic_structures.bending_magnet import BendingMagnet
 
-class OWSRWBendingMagnet(OWSRWSource):
+class OWSRWIRBendingMagnet(OWSRWSource):
 
     name = "IR Bending Magnet"
     description = "SRW Source: IR Bending Magnet"
@@ -23,6 +23,12 @@ class OWSRWBendingMagnet(OWSRWSource):
     magnetic_radius = Setting(5.56)
     magnetic_field = Setting(1.2)
     length = Setting(0.8)
+
+    center_of_straight_section = Setting(6.2025)
+    transition_steepness = Setting(60)
+    z_start = Setting(-8.0)
+    z_end = Setting(8.0)
+    n_points = Setting(16001)
 
     want_main_area=1
 
@@ -46,10 +52,15 @@ class OWSRWBendingMagnet(OWSRWSource):
         self.magnetic_radius = BendingMagnet.calculate_magnetic_radius(self.magnetic_field, electron_beam.electron_energy_in_GeV) if self.magnetic_radius == 0.0 else self.magnetic_radius
         self.magnetic_field = BendingMagnet.calculate_magnetic_field(self.magnetic_radius, electron_beam.electron_energy_in_GeV) if self.magnetic_field == 0.0 else self.magnetic_field
 
-        return SRWBendingMagnetLightSource(electron_beam=electron_beam,
-                                           bending_magnet_magnetic_structure=SRWBendingMagnet(self.magnetic_radius,
-                                                                                              self.magnetic_field,
-                                                                                              self.length))
+        return SRWIRBendingMagnetLightSource(electron_beam=electron_beam,
+                                           bending_magnet_magnetic_structure=SRWIRBendingMagnet(radius=self.magnetic_radius,
+                                                                                                magnetic_field=self.magnetic_field,
+                                                                                                length=self.length,
+                                                                                                center_of_straight_section=self.center_of_straight_section,
+                                                                                                transition_steepness=self.transition_steepness,
+                                                                                                z_start=self.z_start,
+                                                                                                z_end=self.z_end,
+                                                                                                n_points=self.n_points))
 
     def print_specific_infos(self, srw_source):
         pass
@@ -88,7 +99,7 @@ class OWSRWBendingMagnet(OWSRWSource):
 
 if __name__ == "__main__":
     a = QApplication(sys.argv)
-    ow = SRWBendingMagnet()
+    ow = OWSRWIRBendingMagnet()
     ow.show()
     a.exec_()
     ow.saveSettings()

@@ -1,7 +1,7 @@
 recursive-include orangecontrib *.pyx
 recursive-include orangecontrib *.py
-recursive-include wofrysrw *.pyx
-recursive-include wofrysrw *.py
+recursive-include soleil *.pyx
+recursive-include soleil *.py
 
 recursive-include orangecontrib/srw/soleil/widgets *.png *.svg *.ico *.jpg *.bmp
 
