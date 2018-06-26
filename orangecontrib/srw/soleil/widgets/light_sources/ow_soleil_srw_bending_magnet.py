@@ -20,15 +20,14 @@ class OWSRWIRBendingMagnet(OWSRWSource):
     icon = "icons/bending_magnet.png"
     priority = 1
 
-    magnetic_radius = Setting(5.56)
-    magnetic_field = Setting(1.2)
-    length = Setting(0.8)
+    magnetic_radius = Setting(5.8164)
+    magnetic_field = Setting(1.72)
+    length = Setting(0.525)
 
     center_of_straight_section = Setting(6.2025)
     transition_steepness = Setting(60)
     z_start = Setting(-8.0)
     z_end = Setting(8.0)
-    n_points = Setting(16001)
 
     want_main_area=1
 
@@ -41,11 +40,19 @@ class OWSRWIRBendingMagnet(OWSRWSource):
         oasysgui.lineEdit(left_box_2, self, "magnetic_field", "Magnetic Field [T]", labelWidth=260, valueType=float, orientation="horizontal", callback=self.calculateMagneticRadius)
         oasysgui.lineEdit(left_box_2, self, "length", "Length [m]", labelWidth=260, valueType=float, orientation="horizontal")
 
+        oasysgui.lineEdit(left_box_2, self, "center_of_straight_section", "Center of Straight Section [m]", labelWidth=260, valueType=float, orientation="horizontal")
+        oasysgui.lineEdit(left_box_2, self, "transition_steepness", "Transition Steepness", labelWidth=260, valueType=float, orientation="horizontal")
+
+        box = oasysgui.widgetBox(left_box_2, "", orientation="horizontal")
+
+        oasysgui.lineEdit(box, self, "z_start", "By: z start [m]", valueType=float, orientation="horizontal")
+        oasysgui.lineEdit(box, self, "z_end", "end [m]", valueType=float, orientation="horizontal")
+
         gui.rubber(self.controlArea)
         gui.rubber(self.mainArea)
 
     def get_default_initial_z(self):
-        return -0.5*self.length # initial Longitudinal Coordinate
+        return 0.0 # initial Longitudinal Coordinate
 
     def get_srw_source(self, electron_beam):
 
@@ -60,7 +67,7 @@ class OWSRWIRBendingMagnet(OWSRWSource):
                                                                                                 transition_steepness=self.transition_steepness,
                                                                                                 z_start=self.z_start,
                                                                                                 z_end=self.z_end,
-                                                                                                n_points=self.n_points))
+                                                                                                n_points=self.wf_number_of_points_for_trajectory_calculation))
 
     def print_specific_infos(self, srw_source):
         pass
@@ -75,6 +82,8 @@ class OWSRWIRBendingMagnet(OWSRWSource):
         congruence.checkStrictlyPositiveNumber(self.magnetic_radius, "Magnetic Radius")
         congruence.checkStrictlyPositiveNumber(self.magnetic_field, "Magnetic Field")
         congruence.checkStrictlyPositiveNumber(self.length, "Length")
+        congruence.checkPositiveNumber(self.transition_steepness, "Transition Steepness")
+        congruence.checkGreaterThan(self.z_end, self.z_start, "z end", "z start")
 
     def calculateMagneticField(self):
         if self.magnetic_radius > 0:

@@ -34,12 +34,27 @@ class SRWIRBendingMagnet(BendingMagnet, SRWMagneticStructure):
         B_y = self._magnetic_field * (((((z_points + self.center_of_straight_section)**self.transition_steepness)/(self._length**self.transition_steepness + (z_points + self.center_of_straight_section)**self.transition_steepness))-1) +
 									  ((((z_points - self.center_of_straight_section)**self.transition_steepness)/(self._length**self.transition_steepness + (z_points - self.center_of_straight_section)**self.transition_steepness))-1))
 
-        return SRWLMagFld3D(_arBx=array('d', B_x), _arBy=array('d', B_y), _arBz=array('d', B_z),
-							_nx=1,                 _ny=1,                 _nz=self.n_points,
-							_rx=0.0,               _ry=0.0,               _rz=numpy.abs(self.z_end-self.z_start),
-							_nRep=1)
+        magnetic_structure =  SRWLMagFld3D(_arBx=array('d', B_x), _arBy=array('d', B_y), _arBz=array('d', B_z),
+							               _nx=1,                 _ny=1,                 _nz=self.n_points,
+							               _rx=0.0,               _ry=0.0,               _rz=numpy.abs(self.z_end-self.z_start),
+							               _nRep=1)
+        magnetic_structure.interp = 4
+
+        return magnetic_structure
 
     def to_python_code_aux(self):
-        text_code = "magnetic_structure = SRWLMagFldM(" + str(self._magnetic_field) + ", 1, 'n', " + str(self._length) + ")"
+
+        text_code = "z_points = numpy.linspace(" + str(self.z_start) + "," + str(self.z_end) + "," + str(self.n_points) + ")" + "\n"
+
+        text_code += "B_x = numpy.zeros(" + str(self.n_points) + ")" + "\n"
+        text_code += "B_y = " + str(self._magnetic_field) +" * (((((z_points + " + str(self.center_of_straight_section) + ")**" + str(self.transition_steepness) +")/(" + \
+                     str(self._length) + "**" + str(self.transition_steepness) + " + (z_points + " + str(self.center_of_straight_section) + ")**" + str(self.transition_steepness) + "))-1) + ((((z_points - " + \
+                     str(self.center_of_straight_section) + ")**" + str(self.transition_steepness) +  ")/(" + str(self._length) + "**" + str(self.transition_steepness) + " + (z_points - " + \
+                     str(self.center_of_straight_section) + ")**" + str(self.transition_steepness) + "))-1))" + "\n"
+        text_code += "B_z = numpy.zeros(" + str(self.n_points) + ")" + "\n"
+
+        text_code += "\n" + "magnetic_structure = SRWLMagFld3D(_arBx=array('d', B_x), _arBy=array('d', B_y), _arBz=array('d', B_z), _nx=1, _ny=1, _nz=" + str(self.n_points) + "," + \
+				     "_rx=0.0, _ry=0.0, _rz=numpy.abs(" + str(self.z_end) + "-" + str(self.z_start) +"), _nRep=1)"
 
         return text_code
+
