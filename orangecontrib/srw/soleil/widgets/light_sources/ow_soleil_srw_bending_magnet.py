@@ -60,14 +60,14 @@ class OWSRWIRBendingMagnet(OWSRWSource):
         self.magnetic_field = BendingMagnet.calculate_magnetic_field(self.magnetic_radius, electron_beam.electron_energy_in_GeV) if self.magnetic_field == 0.0 else self.magnetic_field
 
         return SRWIRBendingMagnetLightSource(electron_beam=electron_beam,
-                                           bending_magnet_magnetic_structure=SRWIRBendingMagnet(radius=self.magnetic_radius,
-                                                                                                magnetic_field=self.magnetic_field,
-                                                                                                length=self.length,
-                                                                                                center_of_straight_section=self.center_of_straight_section,
-                                                                                                transition_steepness=self.transition_steepness,
-                                                                                                z_start=self.z_start,
-                                                                                                z_end=self.z_end,
-                                                                                                n_points=self.wf_number_of_points_for_trajectory_calculation))
+                                             bending_magnet_magnetic_structure=SRWIRBendingMagnet(radius=self.magnetic_radius,
+                                                                                                  magnetic_field=self.magnetic_field,
+                                                                                                  length=self.length,
+                                                                                                  center_of_straight_section=self.center_of_straight_section,
+                                                                                                  transition_steepness=self.transition_steepness,
+                                                                                                  z_start=self.z_start,
+                                                                                                  z_end=self.z_end,
+                                                                                                  n_points=self.wf_number_of_points_for_trajectory_calculation))
 
     def print_specific_infos(self, srw_source):
         pass
