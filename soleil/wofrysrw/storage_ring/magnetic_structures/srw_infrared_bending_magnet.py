@@ -1,5 +1,5 @@
 import numpy
-from srwlib import SRWLMagFldM, SRWLMagFld3D, array
+from oasys_srw.srwlib import SRWLMagFldM, SRWLMagFld3D, array
 
 from syned.storage_ring.magnetic_structures.bending_magnet import BendingMagnet
 

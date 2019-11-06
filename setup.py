@@ -7,7 +7,7 @@ import subprocess
 
 NAME = 'OASYS1-SRW-SOLEIL'
 
-VERSION = '1.0.1'
+VERSION = '1.0.2'
 ISRELEASED = False
 
 DESCRIPTION = 'WIDGETS DEVELOPED BY SOLEIL TO EXTEND SRW FUNCTIONALITIES'
@@ -43,11 +43,6 @@ SETUP_REQUIRES = (
 
 INSTALL_REQUIRES = (
                     'setuptools',
-                    'syned',
-                    'wofry',
-                    'oasys1-srwlib',
-                    'wofrysrw',
-                    'OASYS1-SRW',
                    )
 
 if len({'develop', 'release', 'bdist_egg', 'bdist_rpm', 'bdist_wininst',
